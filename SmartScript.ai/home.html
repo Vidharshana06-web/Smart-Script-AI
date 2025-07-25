@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmartScript.ai</title>
+  <link rel="stylesheet" href="home.css" />
+</head>
+<body>
+  <canvas id="cursor-canvas"></canvas>
+
+  <header>
+    <h1 id="typewriter">SmartScript.ai</h1>
+    <div class="nav">
+      <ul>
+        <li><a href="#home.html">Home</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="#">Sign Up</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <section>
+    <img src="layer1.png" alt="layer1" id="star">
+    <h2 class="smart-heading">SmartScript.Ai</h2>
+    <p class="tagline">
+  AI-powered journal formatting and citation tools tailored for top-tier publications.<br> 
+  Submit smarter, faster, and with complete confidence.
+</p>
+    <!-- ✅ Explore Button Links to Journal Section -->
+    <a href="explore.html" id="btn">Explore</a>
+    <img src="mainpng.png" alt="layer2" id="computer">
+  </section>
+  <!-- ✅ Journal Section Updated -->
+  <div class="sec" id="sec">
+    <h2 class="journal-heading">Supported Publications</h2>
+
+    <div class="journal-section">
+
+      <!-- 🔸 First Row -->
+      <div class="journal-row">
+        <div class="journal-card">
+          <div class="journal-inner">
+            <div class="journal-front">
+              <img src="ieepng.png" alt="IEEE Logo" height="170px" width="150px"/>
+            </div>
+            <div class="journal-back">IEEE</div>
+          </div>
+        </div>
+
+        <div class="journal-card">
+          <div class="journal-inner">
+            <div class="journal-front">
+              <img src="springerpng.png" alt="Springer Logo" height="250px" width="300px"/>
+            </div>
+            <div class="journal-back">Springer</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔸 Second Row -->
+      <div class="journal-row">
+        <div class="journal-card">
+          <div class="journal-inner">
+            <div class="journal-front">
+              <img src="elsevierpng.png" alt="Elsevier Logo" height="270x"/>
+            </div>
+            <div class="journal-back">Elsevier</div>
+          </div>
+        </div>
+
+        <div class="journal-card">
+          <div class="journal-inner">
+            <div class="journal-front">
+              <img src="ijmepng.png" alt="ACM Logo" height="210px" width="220px"/>
+            </div>
+            <div class="journal-back">IJME</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Why SmartScript Section -->
+</section>
+
+    <!-- 🔸 Why SmartScript.ai Section -->
+<div class="why-smartscript">
+  <div class="why-content">
+    <div class="why-text floatEffect left-slide">
+      <h2>Why SmartScript.ai?</h2>
+
+      <div class="why-point">
+        <span class="dot"></span>
+        <div>
+          <h4>Precision-Driven Output</h4>
+          <p>SmartScript.ai is designed to generate academic content aligned with specific university or journal formats, increasing accuracy and reducing manual corrections.</p>
+        </div>
+      </div>
+
+      <div class="why-point">
+        <span class="dot"></span>
+        <div>
+          <h4>Time-Saving</h4>
+          <p>Eliminate hours spent formatting and restructuring — just input your project summary and get a well-structured research paper in seconds.</p>
+        </div>
+      </div>
+
+      <div class="why-point">
+        <span class="dot"></span>
+        <div>
+          <h4>Powered by Generative AI</h4>
+          <p>Uses the latest large language models (LLMs) to generate high-quality, context-aware academic writing with proper references and structure.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="why-images floatEffect right-slide">
+      <div class="image-stack">
+        <img src="effect4.jpg" alt="Image 1" class="img-box small-img" />
+        <img src="effect3.jpg" alt="Image 3" class="img-box small-img" />
+      </div>
+      <img src="effect1.jpg" alt="Image 2" class="img-box large-img" />
+      <img src="effect2.jpg" alt="Image 4" class="img-box bottom-img" />
+    </div>
+  </div>
+</div>
+
+
+ <!-- ⚫ Contact Us Section -->
+<section class="contact-section">
+  <div class="contact-container">
+    <h2>Contact Us</h2>
+    <p>We’d love to hear from you. Drop your queries or feedback below!</p>
+    <form class="contact-form">
+      <input type="text" placeholder="Your Name" required />
+      <input type="email" placeholder="Your Email" required />
+      <textarea placeholder="Your Message" rows="5" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+</section>
+
+<!-- ⚪ Footer Section -->
+<footer class="footer">
+  <p>© 2025 SmartScript.ai — All Rights Reserved</p>
+</footer>
+
+
+  <!-- ✅ Script Section -->
+  <script>
+    // Parallax Effect
+    const stars = document.getElementById('star');
+    const text = document.getElementById('text');
+    const btn = document.getElementById('btn');
+    const main = document.getElementById('computer');
+
+    window.addEventListener('scroll', () => {
+      let value = window.scrollY;
+      stars.style.left = value * 0.25 + 'px';
+      if (text) {
+        text.style.marginRight = value * 2 + 'px';
+      }
+    });
+
+    // Nav Animation
+    window.addEventListener('load', () => {
+      const items = document.querySelectorAll('.nav li');
+      items.forEach((item, index) => {
+        setTimeout(() => item.classList.add('slide-down'), index * 150);
+      });
+    });
+
+    // Smoke Cursor Effect
+    const canvas = document.getElementById("cursor-canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const mouse = { x: 0, y: 0 };
+
+    document.addEventListener("mousemove", (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      for (let i = 0; i < 3; i++) {
+        particles.push({
+          x: mouse.x,
+          y: mouse.y,
+          radius: Math.random() * 4 + 1,
+          alpha: 1,
+          dx: (Math.random() - 0.5) * 1.5,
+          dy: (Math.random() - 0.5) * 1.5,
+        });
+      }
+    });
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+        ctx.fill();
+        p.x += p.dx;
+        p.y += p.dy;
+        p.alpha -= 0.01;
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          i--;
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    const cards = document.querySelectorAll('.journal-card');
+
+  cards.forEach((card, index) => {
+    card.dataset.direction = index % 2 === 0 ? 'left' : 'right';
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const direction = entry.target.dataset.direction;
+      if (entry.isIntersecting) {
+        entry.target.classList.add(`visible-${direction}`);
+      } else {
+        entry.target.classList.remove(`visible-${direction}`);
+      }
+    });
+  }, {
+    threshold: 0.2
+  });
+
+  cards.forEach(card => observer.observe(card));
+
+  // why smartscript.ai script
+
+  // ✨ Scroll animation for Why SmartScript section
+const whySection = document.querySelector('.why-smartscript');
+
+const floatObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    } else {
+      entry.target.classList.remove('visible');
+    }
+  });
+}, {
+  threshold: 0.2
+});
+
+floatObserver.observe(whySection);
+
+// Scroll-based slide-in for Why SmartScript.ai
+const floatElements = document.querySelectorAll('.floatEffect');
+
+const floatInObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    } else {
+      entry.target.classList.remove('visible');
+    }
+  });
+}, {
+  threshold: 0.2
+});
+
+floatElements.forEach(el => floatInObserver.observe(el));
+
+
+  document.querySelector('.contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('Thanks for reaching out! 💌 We will get back to you soon.');
+    this.reset();
+  });
+
+
+  document.querySelector('.contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('Thanks for contacting us! 💬 We’ll get back to you shortly.');
+    this.reset();
+  });
+  </script>
+</body>
+</html>
