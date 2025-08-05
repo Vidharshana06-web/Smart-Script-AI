@@ -40,49 +40,47 @@
     <div class="journal-section">
 
       <!-- 🔸 First Row -->
-      <div class="journal-row">
-        <div class="journal-card">
-          <div class="journal-inner">
-            <div class="journal-front">
-              <img src="ieepng.png" alt="IEEE Logo" height="170px" width="150px"/>
-            </div>
-            <div class="journal-back">IEEE</div>
-          </div>
-        </div>
-
-        <div class="journal-card">
-          <div class="journal-inner">
-            <div class="journal-front">
-              <img src="springerpng.png" alt="Springer Logo" height="250px" width="300px"/>
-            </div>
-            <div class="journal-back">Springer</div>
-          </div>
-        </div>
+<div class="journal-row">
+  <div class="journal-card" onclick="goToAI('ieee')" style="cursor: pointer;">
+    <div class="journal-inner">
+      <div class="journal-front">
+        <img src="ieepng.png" alt="IEEE Logo" height="170px" width="150px"/>
       </div>
-
-      <!-- 🔸 Second Row -->
-      <div class="journal-row">
-        <div class="journal-card">
-          <div class="journal-inner">
-            <div class="journal-front">
-              <img src="elsevierpng.png" alt="Elsevier Logo" height="270x"/>
-            </div>
-            <div class="journal-back">Elsevier</div>
-          </div>
-        </div>
-
-        <div class="journal-card">
-          <div class="journal-inner">
-            <div class="journal-front">
-              <img src="ijmepng.png" alt="ACM Logo" height="210px" width="220px"/>
-            </div>
-            <div class="journal-back">IJME</div>
-          </div>
-        </div>
-      </div>
-
+      <div class="journal-back">IEEE</div>
     </div>
   </div>
+
+  <div class="journal-card" onclick="goToAI('springer')" style="cursor: pointer;">
+    <div class="journal-inner">
+      <div class="journal-front">
+        <img src="springerpng.png" alt="Springer Logo" height="250px" width="300px"/>
+      </div>
+      <div class="journal-back">Springer</div>
+    </div>
+  </div>
+</div>
+
+<!-- 🔸 Second Row -->
+<div class="journal-row">
+  <div class="journal-card" onclick="goToAI('elsevier')" style="cursor: pointer;">
+    <div class="journal-inner">
+      <div class="journal-front">
+        <img src="elsevierpng.png" alt="Elsevier Logo" height="270px"/>
+      </div>
+      <div class="journal-back">Elsevier</div>
+    </div>
+  </div>
+
+  <div class="journal-card" onclick="goToAI('ijme')" style="cursor: pointer;">
+    <div class="journal-inner">
+      <div class="journal-front">
+        <img src="ijmepng.png" alt="IJME Logo" height="210px" width="220px"/>
+      </div>
+      <div class="journal-back">IJME</div>
+    </div>
+  </div>
+</div>
+
 
   <!-- Why SmartScript Section -->
 </section>
@@ -295,6 +293,14 @@ floatElements.forEach(el => floatInObserver.observe(el));
     alert('Thanks for contacting us! 💬 We’ll get back to you shortly.');
     this.reset();
   });
+
+
+  //backend work
+  function goToAI(journal) {
+  localStorage.setItem("selectedJournal", journal); // Store journal in browser
+  window.location.href = "ai.html"; // Navigate to AI page
+}
+
   </script>
 </body>
 </html>

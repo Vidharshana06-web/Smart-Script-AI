@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartScript AI Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    body {
+      background-color: #000;
+      color: #fff;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #333;
+    }
+
+    .title {
+      font-size: 24px;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #111;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    select, textarea, button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      background-color: #000;
+      border: 1px solid #555;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    button {
+      background-color: #fff;
+      color: #000;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    button:hover {
+      opacity: 0.8;
+    }
+
+    .output-box {
+      margin-top: 30px;
+      background-color: #111;
+      padding: 20px;
+      border-radius: 10px;
+      white-space: pre-wrap;
+      border: 1px solid #444;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">SmartScript.ai</div>
+  </header>
+
+  <div class="container">
+    <h2>Generate Your Research Script</h2>
+
+    <label for="journalSelect">Choose Journal Format:</label>
+    <select id="journalSelect">
+      <option value="ieee">IEEE</option>
+      <option value="springer">Springer</option>
+      <option value="elsevier">Elsevier</option>
+      <option value="ijme">IJME</option>
+    </select>
+
+    <label for="summaryInput">Paste Your Project Summary:</label>
+    <textarea id="summaryInput" placeholder="Write or paste your project summary here..."></textarea>
+
+    <button onclick="generateScript()">Generate</button>
+
+    <div id="output" class="output-box"></div>
+  </div>
+
+  <script>
+    // Auto-select journal from localStorage if available
+    window.onload = function () {
+      const selected = localStorage.getItem("selectedJournal");
+      if (selected) {
+        const dropdown = document.getElementById("journalSelect");
+        dropdown.value = selected.toLowerCase();
+      }
+    };
+
+    async function generateScript() {
+      const journal = document.getElementById('journalSelect').value;
+      const summary = document.getElementById('summaryInput').value.trim();
+      const outputBox = document.getElementById('output');
+      const button = document.querySelector("button");
+
+      if (!summary) {
+        outputBox.innerText = "❗ Please enter a project summary.";
+        return;
+      }
+
+      button.disabled = true;
+      outputBox.innerText = "⚙️ Generating response...";
+
+      try {
+        const response = await fetch('http://localhost:8080/api/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            universityFormat: journal,
+            summary: summary
+          })
+        });
+
+        const data = await response.text();
+
+        // Typing effect
+        outputBox.innerText = "";
+        let i = 0;
+        const speed = 20;
+        function typeWriter() {
+          if (i < data.length) {
+            outputBox.innerText += data.charAt(i);
+            i++;
+            setTimeout(typeWriter, speed);
+          }
+        }
+        typeWriter();
+      } catch (error) {
+        outputBox.innerText = "❌ Error generating script. Please try again.";
+        console.error(error);
+      } finally {
+        button.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
