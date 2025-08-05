@@ -11,7 +11,7 @@ import java.io.IOException;
 @Service
 public class GeminiService {
 
-    private static final String API_KEY = "AIzaSyB2qDLL3JIrAPA_JTy1BA3kgeZtRmxlaFU"; // Replace with your Gemini API key
+    private static final String API_KEY = "AIzaSyB2qDLL3JIrAPA_JTy1BA3kgeZtRmxlaFU"; // Gemini API key
     private static final String MODEL_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
     public String generateFormattedContent(String summary, String format) throws IOException {
