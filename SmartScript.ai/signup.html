@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Register Page</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+
+body { 
+    display: flex; 
+    height: 85vh;  /* slightly shorter than full screen */
+    overflow: hidden; 
+    background-color: #0f0f0f; 
+}
+
+.left-side {
+    flex: 1;
+    display: flex;
+    justify-content: center;  /* vertical centering */
+    align-items: center;      /* horizontal centering */
+    padding: 0 20px;
+    min-height: 0;
+    height: 100%;
+}
+
+
+
+/* Reduce spacing of last element inside the form */
+.social-buttons {
+    margin-top: 10px;  /* less space */
+}
+
+.footer-text {
+    margin-top: 10px;  /* equal spacing at bottom */
+}
+
+
+@keyframes floaty {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);  /* smoother like login */
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.signup-container {
+    margin-top: 100px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    padding: 25px 35px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 400px;
+    color: white;
+    animation: floaty 6s ease-in-out infinite;  /* slowed down like login */
+}
+
+
+
+.signup-container h2 { text-align: center; margin-bottom: 20px; font-weight: 600; font-size: 26px; }
+.input-group { position: relative; margin-bottom: 15px; }
+.signup-container input { width: 100%; padding: 12px 36px 12px 12px; background: rgba(255,255,255,0.1); border: none; border-radius: 8px; color: white; outline: none; transition: 0.3s; font-size: 14px; }
+.signup-container input:focus { background: rgba(255,255,255,0.2); }
+.input-group .toggle-eye { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #ccc; font-size: 14px; }
+.error-text { font-size: 12px; color: #ff6b6b; margin-top: 2px; }
+
+.signup-container button { width: 100%; padding: 12px; margin-top: 12px; background-color: #00c6ff; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.3s ease; font-size: 15px; }
+.signup-container button:hover { background-color: #0086c3; }
+
+.social-buttons { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+.social-buttons button { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; border: none; padding: 8px; border-radius: 8px; cursor: pointer; }
+.google { background-color: #fff; color: #444; }
+.facebook { background-color: #3b5998; color: white; }
+
+.footer-text { text-align: center; margin-top: 15px; font-size: 12px; color: #bbb; }
+.footer-text a { color: #00c6ff; text-decoration: underline; }
+
+#signupMessage { text-align: center; margin-top: 10px; font-size: 13px; font-weight: 500; }
+#signupMessage.success { color: #28a745; }
+#signupMessage.error { color: #dc3545; }
+
+/* Right side: plain container with signup image fully visible */
+.right-side { 
+    flex: 1; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 0; 
+}
+
+.right-side img { width: 100%; height: 100%; object-fit: contain; }
+
+@media (max-width: 768px) { 
+    body { flex-direction: column; } 
+    .left-side, .right-side { height: 50vh; } 
+}
+</style>
+</head>
+<body>
+
+<!-- Left Side Form -->
+<div class="left-side">
+  <div class="signup-container">
+    <h2>Sign Up</h2>
+    <form id="signupForm" onsubmit="return validateSignup(event)">
+      <div class="input-group">
+        <input type="text" id="username" placeholder="Username" />
+        <div class="error-text" id="usernameError"></div>
+      </div>
+      <div class="input-group">
+        <input type="email" id="email" placeholder="Email" />
+        <div class="error-text" id="emailError"></div>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Password" />
+        <i class="fa fa-eye toggle-eye" onclick="togglePasswordVisibility(this, 'password')"></i>
+        <div class="error-text" id="passwordError"></div>
+      </div>
+      <div class="input-group">
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" />
+        <i class="fa fa-eye toggle-eye" onclick="togglePasswordVisibility(this, 'confirmPassword')"></i>
+        <div class="error-text" id="confirmPasswordError"></div>
+      </div>
+      <button type="submit">Register</button>
+    </form>
+
+    <div id="signupMessage"></div>
+
+    <div class="social-buttons">
+      <button class="google"><i class="fab fa-google"></i> Sign up with Google</button>
+      <button class="facebook"><i class="fab fa-facebook-f"></i> Sign up with Facebook</button>
+    </div>
+
+    <div class="footer-text">
+      Already have an account? <a href="login.html">Login</a>
+    </div>
+  </div>
+</div>
+
+<!-- Right Side Image -->
+<div class="right-side">
+  <img src="image.png" alt="Signup Image">
+</div>
+
+<script>
+function togglePasswordVisibility(icon, fieldId) {
+  const input = document.getElementById(fieldId);
+  if (input.type === "password") {
+    input.type = "text";
+    icon.classList.remove("fa-eye");
+    icon.classList.add("fa-eye-slash");
+  } else {
+    input.type = "password";
+    icon.classList.remove("fa-eye-slash");
+    icon.classList.add("fa-eye");
+  }
+}
+
+async function validateSignup(event) {
+  event.preventDefault();
+  const msgDiv = document.getElementById("signupMessage");
+  msgDiv.textContent = "";
+  msgDiv.className = "";
+
+  const user = document.getElementById('username').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const pwd = document.getElementById('password').value;
+  const confirmPwd = document.getElementById('confirmPassword').value;
+
+  let isValid = true;
+
+  // Reset all error messages
+  document.getElementById('usernameError').textContent = '';
+  document.getElementById('emailError').textContent = '';
+  document.getElementById('passwordError').textContent = '';
+  document.getElementById('confirmPasswordError').textContent = '';
+
+  // Username validation (only letters, at least 3 chars)
+  if (!/^[A-Za-z]{3,}$/.test(user)) {
+    document.getElementById('usernameError').textContent = 'Username must be at least 3 letters (A-Z only)';
+    isValid = false;
+  }
+
+  // Email validation
+  if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/.test(email)) {
+    document.getElementById('emailError').textContent = 'Enter a valid email (e.g. name@gmail.com)';
+    isValid = false;
+  }
+
+  // Strong password validation
+  if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/.test(pwd)) {
+    document.getElementById('passwordError').textContent = 'Password must be 8+ chars with uppercase, lowercase, number & special char';
+    isValid = false;
+  }
+
+  // Confirm password validation
+  if (pwd !== confirmPwd) {
+    document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+    isValid = false;
+  }
+
+  if (!isValid) return false;
+
+  // 🚀 Server request only when user clicks Register and form is valid
+  try {
+    const response = await fetch("http://localhost:8080/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name:user,email:email,password:pwd })
+    });
+    const result = await response.json().catch(() => ({}));
+
+    if (response.ok) {
+      msgDiv.textContent = "🎉 Account created successfully! Please login.";
+      msgDiv.classList.add("success");
+      setTimeout(()=> window.location.href="login.html",1500);
+    } else {
+      msgDiv.textContent = result.message || "❌ This email already exists.";
+      msgDiv.classList.add("error");
+    }
+  } catch(err) {
+    console.error(err);
+    msgDiv.textContent = "⚠️ Something went wrong. Please try again.";
+    msgDiv.classList.add("error");
+  }
+  return false;
+}
+
+// ✅ Real-time validation (client-side only, no server call)
+document.querySelectorAll("#username, #email, #password, #confirmPassword").forEach(input => {
+  input.addEventListener("input", () => {
+    // clear error when typing
+    document.getElementById(input.id + "Error").textContent = "";
+    document.getElementById("signupMessage").textContent = "";
+    document.getElementById("signupMessage").className = "";
+  });
+});
+</script>
+
+
+</body>
+</html>

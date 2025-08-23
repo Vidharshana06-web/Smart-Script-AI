@@ -13,11 +13,12 @@
     <h1 id="typewriter">SmartScript.ai</h1>
     <div class="nav">
       <ul>
-        <li><a href="#home.html">Home</a></li>
+        <li><a href="home.html">Home</a></li>
         <li><a href="explore.html">About Us</a></li>
         <li><a href="#contact-container">Contact Us</a></li>
         <li><a href="login.html">Login</a></li>
-        <li><a href="#">Sign Up</a></li>
+        <li><a href="signup.html">Sign Up</a></li>
+         <li><a href="#" onclick="logout()">Logout</a></li>
       </ul>
     </div>
   </header>
@@ -150,6 +151,20 @@
 
   <!-- ✅ Script Section -->
   <script>
+
+
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+    const user = sessionStorage.getItem("user");
+    if (!user) {
+        // not logged in → go back to signup
+        window.location.href = "signup.html";
+    }
+});
+
+
+  
     // Parallax Effect
     const stars = document.getElementById('star');
     const text = document.getElementById('text');
@@ -300,6 +315,18 @@ floatElements.forEach(el => floatInObserver.observe(el));
   localStorage.setItem("selectedJournal", journal); // Store journal in browser
   window.location.href = "ai.html"; // Navigate to AI page
 }
+
+
+
+
+function logout() {
+      // Clear session (if you stored user info in sessionStorage or localStorage)
+      sessionStorage.clear();  
+      localStorage.clear();
+
+      // Redirect to signup or login page
+      window.location.href = "login.html"; // or "login.html"
+    }
 
   </script>
 </body>

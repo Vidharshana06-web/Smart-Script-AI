@@ -1,205 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Animated Login Page</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login Page</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-    }
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+body { display: flex; height: 100vh; background-color: #0f0f0f; overflow: hidden; }
+.left-side { flex: 1; background: #111; display: flex; justify-content: center; align-items: center; }
+.right-side { flex: 1; background: #121212; display: flex; justify-content: center; align-items: center; padding: 40px; }
 
-    body {
-      display: flex;
-      height: 100vh;
-      background-color: #0f0f0f;
-      overflow: hidden;
-    }
+.login-container {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+  padding: 50px;
+  width: 100%;
+  max-width: 420px;
+  color: white;
+  animation: floaty 6s ease-in-out infinite;
+}
 
-    .left-side {
-      flex: 1;
-      background: #111; /* Empty for your custom animation */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+@keyframes floaty { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
 
-    .right-side {
-      flex: 1;
-      background: #121212;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 40px;
-    }
+.login-container h2 { text-align: center; margin-bottom: 30px; font-weight: 600; font-size: 28px; }
+.login-container input { width: 100%; padding: 14px; margin: 10px 0; background: rgba(255, 255, 255, 0.1); border: none; border-radius: 8px; color: white; outline: none; transition: 0.3s; font-size: 16px; }
+.login-container input:focus { background: rgba(255, 255, 255, 0.2); }
 
-    .login-container {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      backdrop-filter: blur(15px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-      padding: 40px;
-      width: 100%;
-      max-width: 380px;
-      color: white;
-      animation: floaty 6s ease-in-out infinite;
-    }
+.input-group { position: relative; }
+.error-text { font-size: 12px; color: #ff6b6b; margin: -5px 0 8px 2px; display: block; }
 
-    @keyframes floaty {
-      0%, 100% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
-    }
+.toggle-eye { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #ccc; font-size: 16px; }
 
-    .login-container h2 {
-      text-align: center;
-      margin-bottom: 25px;
-      font-weight: 600;
-    }
+.login-container button { width: 100%; padding: 14px; margin-top: 15px; background-color: #00c6ff; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.3s ease; font-size: 16px; }
+.login-container button:hover { background-color: #0086c3; }
 
-    .login-container input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      border-radius: 8px;
-      color: white;
-      outline: none;
-      transition: 0.3s;
-    }
+.social-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+.social-buttons button { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; border: none; padding: 10px; border-radius: 8px; cursor: pointer; }
+.google { background-color: #fff; color: #444; }
+.facebook { background-color: #3b5998; color: white; }
 
-    .login-container input:focus {
-      background: rgba(255, 255, 255, 0.2);
-    }
+#errorMsg { text-align: center; margin-top: 15px; font-size: 15px; font-weight: 500; }
+#errorMsg.success { color: #28a745; }
+#errorMsg.error { color: #dc3545; }
 
-    .login-container button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 15px;
-      background-color: #00c6ff;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
+.footer-text { text-align: center; margin-top: 20px; font-size: 13px; color: #bbb; }
+.footer-text a { color: #00c6ff; text-decoration: underline; }
 
-    .login-container button:hover {
-      background-color: #0086c3;
-    }
-
-    .social-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .social-buttons button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-size: 14px;
-      border: none;
-      padding: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .google {
-      background-color: #fff;
-      color: #444;
-    }
-
-    .facebook {
-      background-color: #3b5998;
-      color: white;
-    }
-
-    .error {
-      color: #ff6b6b;
-      font-size: 14px;
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .footer-text {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 13px;
-      color: #bbb;
-    }
-
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-      .left-side {
-        height: 35vh;
-      }
-      .right-side {
-        height: 65vh;
-      }
-    }
-  </style>
+@media (max-width: 768px) { body { flex-direction: column; } .left-side { height: 35vh; } .right-side { height: 65vh; } }
+</style>
 </head>
 <body>
 
-  <!-- Left Side (empty for your custom object or animation) -->
-  <div class="left-side">
-    <!-- Add your animation or object here -->
-     <img src="" alt="bg">
-  </div>
+<!-- Left Side -->
+<div class="left-side">
+  <img src="loginpng.png" alt="bg" style="max-width:80%; max-height:80%;">
+</div>
 
-  <!-- Right Side Login Form -->
-  <div class="right-side">
-    <div class="login-container">
-      <h2>Sign In</h2>
-      <input type="text" id="username" placeholder="Username" />
-      <input type="password" id="password" placeholder="Password" />
-      <button onclick="validateLogin()">Login</button>
-      <p id="errorMsg" class="error"></p>
+<!-- Right Side Login Form -->
+<div class="right-side">
+  <div class="login-container">
+    <h2>Login In</h2>
 
-      <div class="social-buttons">
-        <button class="google">
-  <i class="fab fa-google"></i> Continue with Google
-</button>
+    <div class="input-group">
+      <input type="email" id="email" placeholder="Email" required />
+      <span class="error-text" id="emailError"></span>
+    </div>
 
-<button class="facebook">
-  <i class="fab fa-facebook-f"></i> Continue with Facebook
-</button>
+    <div class="input-group">
+      <input type="password" id="password" placeholder="Password" required />
+      <i class="fa fa-eye toggle-eye" onclick="togglePassword('password', this)"></i>
+      <span class="error-text" id="passwordError"></span>
+    </div>
 
-      <div class="footer-text">
-        Don't have an account? <a href="#" style="color:#00c6ff;text-decoration:underline;">Sign up</a>
-      </div>
+    <button onclick="validateLogin()">Login</button>
+    <p id="errorMsg"></p>
+
+    <div class="social-buttons">
+      <button class="google"><i class="fab fa-google"></i> Continue with Google</button>
+      <button class="facebook"><i class="fab fa-facebook-f"></i> Continue with Facebook</button>
+    </div>
+
+    <div class="footer-text">
+      Don’t have an account? <a href="signup.html">Sign up</a>
     </div>
   </div>
+</div>
 
-  <script>
-    function validateLogin() {
-      const user = document.getElementById('username').value;
-      const pass = document.getElementById('password').value;
-      const errorMsg = document.getElementById('errorMsg');
+<script>
+function togglePassword(fieldId, icon) {
+  const input = document.getElementById(fieldId);
+  if(input.type === "password") {
+    input.type = "text";
+    icon.classList.remove("fa-eye");
+    icon.classList.add("fa-eye-slash");
+  } else {
+    input.type = "password";
+    icon.classList.remove("fa-eye-slash");
+    icon.classList.add("fa-eye");
+  }
+}
 
-      if (user === 'admin' && pass === '12345') {
-        window.location.href = "home.html";
-      } else {
-        errorMsg.textContent = "Invalid username or password!";
-      }
+// Regex patterns
+const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+
+async function validateLogin() {  
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const errorMsg = document.getElementById('errorMsg');
+
+  const emailError = document.getElementById('emailError');
+  const passwordError = document.getElementById('passwordError');
+
+  let isValid = true;
+  errorMsg.textContent = "";
+  errorMsg.className = "";
+  emailError.textContent = "";
+  passwordError.textContent = "";
+
+  // Email validation
+  if(!emailPattern.test(email)) {
+    emailError.textContent = "Enter a valid email (e.g. example@gmail.com)";
+    isValid = false;
+  }
+
+  // Password validation
+  if(!passwordPattern.test(password)) {
+    passwordError.textContent = "Password must be 8+ chars, include upper, lower, number & special char.";
+    isValid = false;
+  }
+
+  if(!isValid) return;
+
+  // API Call only if validation passes
+  try {
+    const response = await fetch("http://localhost:8080/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    const result = await response.json().catch(() => ({}));
+
+    if(response.ok) {
+      errorMsg.textContent = "🎉 Login successful!";
+      errorMsg.classList.add("success");
+
+      // ✅ Save user in sessionStorage
+      sessionStorage.setItem("user", JSON.stringify({ email: email }));
+
+      // ✅ Redirect to home
+      setTimeout(()=> window.location.href="home.html", 800);
+
+    } else {
+      errorMsg.textContent = result.message || "❌ Invalid email or password!";
+      errorMsg.classList.add("error");
     }
-  </script>
+  } catch(err) {
+    console.error(err);
+    errorMsg.textContent = "⚠️ Something went wrong. Please try again.";
+    errorMsg.classList.add("error");
+  }
+}
+
+// ✅ Real-time validation
+document.getElementById('email').addEventListener('input', () => {
+  const emailError = document.getElementById('emailError');
+  if(emailPattern.test(document.getElementById('email').value.trim())) {
+    emailError.textContent = "";
+  }
+});
+
+document.getElementById('password').addEventListener('input', () => {
+  const passwordError = document.getElementById('passwordError');
+  if(passwordPattern.test(document.getElementById('password').value.trim())) {
+    passwordError.textContent = "";
+  }
+});
+</script>
+
+
 </body>
 </html>
