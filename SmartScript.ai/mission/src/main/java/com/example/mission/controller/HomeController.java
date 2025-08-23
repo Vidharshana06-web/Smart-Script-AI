@@ -1,0 +1,18 @@
+package com.example.mission.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class HomeController {
+
+    @GetMapping("/")   // root URL
+    public String home() {
+        return "Welcome to Mission App 🚀";
+    }
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello, Spring Boot!";
+    }
+}
