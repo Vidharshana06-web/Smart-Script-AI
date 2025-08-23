@@ -4,107 +4,552 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SmartScript AI Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Roboto Mono', monospace;
     }
 
     body {
-      background-color: #000;
+      background: #000;
       color: #fff;
-      padding: 20px;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated background grid */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: grid-move 20s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes grid-move {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+
+    /* Floating particles */
+    .particle {
+      position: fixed;
+      width: 2px;
+      height: 2px;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: float-particle 15s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes float-particle {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.6;
+      }
+      90% {
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(-100px) translateX(100px);
+        opacity: 0;
+      }
     }
 
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #333;
+      padding: 30px 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .title {
-      font-size: 24px;
-      color: #fff;
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff, #888);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+    }
+
+    .title::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #fff, transparent);
+      animation: title-glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes title-glow {
+      from { opacity: 0.5; }
+      to { opacity: 1; }
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: #888;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00ff00;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
     }
 
     .container {
-      max-width: 800px;
-      margin: 40px auto;
-      background: #111;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+      max-width: 900px;
+      margin: 60px auto;
+      background: linear-gradient(145deg, #111, #0a0a0a);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 
+        0 0 50px rgba(255,255,255,0.05),
+        inset 0 0 50px rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+      animation: container-entrance 0.8s ease-out;
     }
 
-    select, textarea, button {
-      width: 100%;
-      margin-top: 15px;
-      padding: 12px;
-      background-color: #000;
-      border: 1px solid #555;
-      color: #fff;
-      border-radius: 8px;
+    @keyframes container-entrance {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #fff, transparent);
+      animation: scan-line 3s linear infinite;
+    }
+
+    @keyframes scan-line {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    h2 {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 40px;
+      text-align: center;
+      background: linear-gradient(135deg, #fff, #888);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: text-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes text-glow {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
+      50% { filter: drop-shadow(0 0 20px rgba(255,255,255,0.5)); }
+    }
+
+    label {
+      display: block;
+      margin-top: 25px;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #ccc;
       font-size: 16px;
     }
 
+    select, textarea {
+      width: 100%;
+      padding: 18px 20px;
+      background: rgba(0,0,0,0.8);
+      border: 2px solid rgba(255,255,255,0.1);
+      color: #fff;
+      border-radius: 12px;
+      font-size: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    select:focus, textarea:focus {
+      outline: none;
+      border-color: #fff;
+      background: rgba(255,255,255,0.05);
+      box-shadow: 
+        0 0 20px rgba(255,255,255,0.1),
+        inset 0 0 20px rgba(255,255,255,0.05);
+      transform: translateY(-2px);
+    }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 12px center;
+      background-repeat: no-repeat;
+      background-size: 16px;
+      padding-right: 50px;
+      appearance: none;
+    }
+
     textarea {
-      min-height: 150px;
+      min-height: 180px;
       resize: vertical;
+      line-height: 1.6;
+    }
+
+    textarea::placeholder {
+      color: #666;
+      font-style: italic;
     }
 
     button {
-      background-color: #fff;
+      width: 100%;
+      margin-top: 30px;
+      padding: 20px;
+      background: linear-gradient(135deg, #fff, #e0e0e0);
       color: #000;
       border: none;
-      font-weight: bold;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 18px;
       cursor: pointer;
-      transition: opacity 0.3s;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    button:hover::before {
+      left: 100%;
     }
 
     button:hover {
-      opacity: 0.8;
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(255,255,255,0.2);
+    }
+
+    button:active {
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .generate-btn {
+      position: relative;
+    }
+
+    .generate-btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      margin: auto;
+      border: 2px solid transparent;
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes spin {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
     .output-box {
-      margin-top: 30px;
-      background-color: #111;
-      padding: 20px;
-      border-radius: 10px;
+      margin-top: 40px;
+      background: linear-gradient(145deg, #0a0a0a, #111);
+      padding: 30px;
+      border-radius: 15px;
+      border: 2px solid rgba(255,255,255,0.1);
+      min-height: 200px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      line-height: 1.8;
       white-space: pre-wrap;
-      border: 1px solid #444;
+      word-wrap: break-word;
+      position: relative;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+    }
+
+    .output-box::before {
+      content: 'OUTPUT';
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      background: #000;
+      padding: 5px 15px;
+      font-size: 12px;
+      color: #888;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .output-box.active {
+      border-color: #fff;
+      box-shadow: 
+        0 0 30px rgba(255,255,255,0.1),
+        inset 0 0 30px rgba(0,0,0,0.5);
+    }
+
+    .typing-cursor {
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .terminal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ff5f57;
+    }
+
+    .terminal-dot:nth-child(2) {
+      background: #ffbd2e;
+    }
+
+    .terminal-dot:nth-child(3) {
+      background: #28ca42;
+    }
+
+    .terminal-title {
+      margin-left: auto;
+      font-size: 12px;
+      color: #888;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .form-group.focused label {
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* Stats display */
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .stat-item {
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        margin: 30px 20px;
+        padding: 25px;
+      }
+      
+      header {
+        padding: 20px;
+      }
+      
+      .title {
+        font-size: 24px;
+      }
+      
+      h2 {
+        font-size: 26px;
+      }
+      
+      .stats {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #111;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #333;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
     }
   </style>
 </head>
 <body>
   <header>
     <div class="title">SmartScript.ai</div>
+    <div class="status-indicator">
+      <div class="status-dot"></div>
+      <span>AI Online</span>
+    </div>
   </header>
 
   <div class="container">
+    <div class="terminal-header">
+      <div class="terminal-dot"></div>
+      <div class="terminal-dot"></div>
+      <div class="terminal-dot"></div>
+      <div class="terminal-title">research_generator.exe</div>
+    </div>
+
     <h2>Generate Your Research Script</h2>
 
-    <label for="journalSelect">Choose Journal Format:</label>
-    <select id="journalSelect">
-      <option value="ieee">IEEE</option>
-      <option value="springer">Springer</option>
-      <option value="elsevier">Elsevier</option>
-      <option value="ijme">IJME</option>
-    </select>
+    <div class="form-group">
+      <label for="journalSelect">Choose Journal Format:</label>
+      <select id="journalSelect">
+        <option value="ieee">IEEE</option>
+        <option value="springer">Springer</option>
+        <option value="elsevier">Elsevier</option>
+        <option value="ijme">IJME</option>
+      </select>
+    </div>
 
-    <label for="summaryInput">Paste Your Project Summary:</label>
-    <textarea id="summaryInput" placeholder="Write or paste your project summary here..."></textarea>
+    <div class="form-group">
+      <label for="summaryInput">Paste Your Project Summary:</label>
+      <textarea id="summaryInput" placeholder="Write or paste your project summary here...&#10;&#10;Example:&#10;- Research topic and objectives&#10;- Methodology used&#10;- Key findings and results&#10;- Conclusions and implications"></textarea>
+    </div>
 
-    <button onclick="generateScript()">Generate</button>
+    <button class="generate-btn" onclick="generateScript()">
+      <span class="btn-text">Generate Research Paper</span>
+    </button>
 
-    <div id="output" class="output-box"></div>
+    <div class="stats">
+      <div class="stat-item">
+        <span class="stat-number" id="wordCount">0</span>
+        <span class="stat-label">Words</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number" id="charCount">0</span>
+        <span class="stat-label">Characters</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number" id="genTime">--</span>
+        <span class="stat-label">Gen Time</span>
+      </div>
+    </div>
+
+    <div id="output" class="output-box">
+      <div style="color: #666; font-style: italic;">
+        Your generated research paper will appear here...
+        <span class="typing-cursor">|</span>
+      </div>
+    </div>
   </div>
 
   <script>
+    // Create floating particles
+    function createParticles() {
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+        document.body.appendChild(particle);
+      }
+    }
+
+    // Initialize particles
+    createParticles();
+
     // Auto-select journal from localStorage if available
     window.onload = function () {
       const selected = localStorage.getItem("selectedJournal");
@@ -112,21 +557,64 @@
         const dropdown = document.getElementById("journalSelect");
         dropdown.value = selected.toLowerCase();
       }
+      updateStats();
     };
+
+    // Form focus effects
+    document.querySelectorAll('select, textarea').forEach(element => {
+      element.addEventListener('focus', function() {
+        this.closest('.form-group').classList.add('focused');
+      });
+      
+      element.addEventListener('blur', function() {
+        this.closest('.form-group').classList.remove('focused');
+      });
+    });
+
+    // Update stats
+    function updateStats() {
+      const text = document.getElementById('summaryInput').value;
+      const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+      const chars = text.length;
+      
+      document.getElementById('wordCount').textContent = words;
+      document.getElementById('charCount').textContent = chars;
+    }
+
+    document.getElementById('summaryInput').addEventListener('input', updateStats);
 
     async function generateScript() {
       const journal = document.getElementById('journalSelect').value;
       const summary = document.getElementById('summaryInput').value.trim();
       const outputBox = document.getElementById('output');
-      const button = document.querySelector("button");
+      const button = document.querySelector(".generate-btn");
+      const btnText = button.querySelector('.btn-text');
+      const startTime = Date.now();
 
       if (!summary) {
-        outputBox.innerText = "❗ Please enter a project summary.";
+        outputBox.innerHTML = `
+          <div style="color: #ff6b6b;">
+            ❗ Error: Please enter a project summary to generate your research paper.
+          </div>
+        `;
         return;
       }
 
+      // Button loading state
       button.disabled = true;
-      outputBox.innerText = "⚙️ Generating response...";
+      button.classList.add('loading');
+      btnText.textContent = 'Generating...';
+      
+      // Output box loading state
+      outputBox.classList.add('active');
+      outputBox.innerHTML = `
+        <div style="color: #888;">
+          <div>🔄 Initializing AI engine...</div>
+          <div>📊 Analyzing project summary...</div>
+          <div>📝 Formatting for ${journal.toUpperCase()} standards...</div>
+          <div>⚡ Generating research paper<span class="typing-cursor">|</span></div>
+        </div>
+      `;
 
       try {
         const response = await fetch('http://localhost:8080/api/generate', {
@@ -141,26 +629,68 @@
         });
 
         const data = await response.text();
+        const endTime = Date.now();
+        const genTime = ((endTime - startTime) / 1000).toFixed(1);
+        
+        document.getElementById('genTime').textContent = genTime + 's';
 
         // Typing effect
-        outputBox.innerText = "";
+        outputBox.innerHTML = '';
         let i = 0;
-        const speed = 20;
+        const speed = 15;
+        
         function typeWriter() {
           if (i < data.length) {
-            outputBox.innerText += data.charAt(i);
+            outputBox.innerHTML += data.charAt(i);
             i++;
             setTimeout(typeWriter, speed);
+            
+            // Auto scroll to bottom
+            outputBox.scrollTop = outputBox.scrollHeight;
+          } else {
+            // Add completion indicator
+            setTimeout(() => {
+              outputBox.innerHTML += '\n\n<div style="color: #28ca42; font-size: 12px; text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">✅ Generation completed successfully</div>';
+            }, 500);
           }
         }
+        
         typeWriter();
+        
       } catch (error) {
-        outputBox.innerText = "❌ Error generating script. Please try again.";
-        console.error(error);
+        const endTime = Date.now();
+        const genTime = ((endTime - startTime) / 1000).toFixed(1);
+        document.getElementById('genTime').textContent = genTime + 's';
+        
+        outputBox.innerHTML = `
+          <div style="color: #ff6b6b;">
+            <div>❌ Connection Error</div>
+            <div style="margin-top: 10px; font-size: 12px; color: #888;">
+              Failed to connect to AI server. Please ensure the backend is running on localhost:8080
+            </div>
+            <div style="margin-top: 15px; font-size: 12px; color: #666;">
+              Error details: ${error.message}
+            </div>
+          </div>
+        `;
+        console.error('Generation error:', error);
       } finally {
+        // Reset button state
         button.disabled = false;
+        button.classList.remove('loading');
+        btnText.textContent = 'Generate Research Paper';
       }
     }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key === 'Enter') {
+        generateScript();
+      }
+    });
+
+    // Add tooltip for keyboard shortcut
+    document.querySelector('.generate-btn').title = 'Click or press Ctrl+Enter to generate';
   </script>
 </body>
 </html>
