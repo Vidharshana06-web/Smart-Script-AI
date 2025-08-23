@@ -429,6 +429,42 @@
       letter-spacing: 1px;
     }
 
+    /* Download button styles */
+    .download-btn {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: #fff;
+      margin-top: 20px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .download-btn:hover {
+      background: linear-gradient(135deg, #45a049, #3d8b40);
+      box-shadow: 0 15px 30px rgba(76,175,80,0.3);
+    }
+
+    .download-btn.loading::after {
+      border-top-color: #fff;
+    }
+
+    .download-icon {
+      font-size: 20px;
+    }
+
+    /* Actions container */
+    .actions-container {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .actions-container button {
+      flex: 1;
+      margin-top: 0;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .container {
@@ -449,6 +485,11 @@
       }
       
       .stats {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .actions-container {
         flex-direction: column;
         gap: 15px;
       }
@@ -507,9 +548,16 @@
       <textarea id="summaryInput" placeholder="Write or paste your project summary here...&#10;&#10;Example:&#10;- Research topic and objectives&#10;- Methodology used&#10;- Key findings and results&#10;- Conclusions and implications"></textarea>
     </div>
 
-    <button class="generate-btn" onclick="generateScript()">
-      <span class="btn-text">Generate Research Paper</span>
-    </button>
+    <div class="actions-container">
+      <button class="generate-btn" onclick="generateScript()">
+        <span class="btn-text">Generate Research Paper</span>
+      </button>
+      
+      <button class="download-btn" id="downloadBtn" onclick="downloadAsWord()">
+        <span class="download-icon">📥</span>
+        <span>Download as Word Doc</span>
+      </button>
+    </div>
 
     <div class="stats">
       <div class="stat-item">
@@ -534,7 +582,13 @@
     </div>
   </div>
 
+  <!-- Include FileSaver.js and docx library from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.4.7/docx.min.js"></script>
+
   <script>
+    let generatedContent = ''; // Store the generated content
+
     // Create floating particles
     function createParticles() {
       for (let i = 0; i < 50; i++) {
@@ -589,6 +643,7 @@
       const outputBox = document.getElementById('output');
       const button = document.querySelector(".generate-btn");
       const btnText = button.querySelector('.btn-text');
+      const downloadBtn = document.getElementById('downloadBtn');
       const startTime = Date.now();
 
       if (!summary) {
@@ -599,6 +654,9 @@
         `;
         return;
       }
+
+      // Hide download button during generation
+      downloadBtn.style.display = 'none';
 
       // Button loading state
       button.disabled = true;
@@ -629,6 +687,7 @@
         });
 
         const data = await response.text();
+        generatedContent = data; // Store the content for download
         const endTime = Date.now();
         const genTime = ((endTime - startTime) / 1000).toFixed(1);
         
@@ -651,6 +710,8 @@
             // Add completion indicator
             setTimeout(() => {
               outputBox.innerHTML += '\n\n<div style="color: #28ca42; font-size: 12px; text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">✅ Generation completed successfully</div>';
+              // Show download button after completion
+              downloadBtn.style.display = 'flex';
             }, 500);
           }
         }
@@ -682,15 +743,256 @@
       }
     }
 
+    async function downloadAsWord() {
+      if (!generatedContent) {
+        alert('Please generate content first before downloading.');
+        return;
+      }
+
+      const downloadBtn = document.getElementById('downloadBtn');
+      const originalText = downloadBtn.innerHTML;
+      
+      try {
+        // Show loading state
+        downloadBtn.disabled = true;
+        downloadBtn.classList.add('loading');
+        downloadBtn.innerHTML = '<span>Preparing Download...</span>';
+
+        // Get journal format for filename
+        const journal = document.getElementById('journalSelect').value.toUpperCase();
+        const date = new Date().toISOString().slice(0, 10);
+        const filename = `Research_Paper_${journal}_${date}.docx`;
+
+        // Check if docx library is loaded
+        if (typeof docx === 'undefined') {
+          throw new Error('Document library not loaded');
+        }
+
+        // Clean and parse the content
+        const cleanContent = generatedContent.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+        const lines = cleanContent.split('\n').filter(line => line.trim());
+        
+        // Create document elements
+        const documentChildren = [];
+
+        // Add title page
+        documentChildren.push(
+          new docx.Paragraph({
+            children: [
+              new docx.TextRun({
+                text: "Research Paper",
+                bold: true,
+                size: 32,
+              })
+            ],
+            alignment: docx.AlignmentType.CENTER,
+            spacing: { after: 400 }
+          }),
+          new docx.Paragraph({
+            children: [
+              new docx.TextRun({
+                text: `Generated using ${journal} Format`,
+                size: 24,
+                italics: true
+              })
+            ],
+            alignment: docx.AlignmentType.CENTER,
+            spacing: { after: 600 }
+          }),
+          new docx.Paragraph({
+            children: [
+              new docx.TextRun({
+                text: `Generated on: ${new Date().toLocaleDateString()}`,
+                size: 20,
+              })
+            ],
+            alignment: docx.AlignmentType.CENTER,
+            spacing: { after: 800 }
+          }),
+          new docx.Paragraph({
+            children: [new docx.PageBreak()]
+          })
+        );
+
+        // Process content lines
+        let currentParagraph = '';
+        
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+          
+          if (line === '') continue;
+          
+          // Check if line is a heading (short lines, numbered sections, or all caps words)
+          const isHeading = line.length < 80 && 
+            (line.match(/^(\d+\.|\d+\.\d+\.?|\b[A-Z][A-Z\s]{2,}\b|Abstract|Introduction|Conclusion|References|Methodology)/i) ||
+             line.split(' ').length <= 8);
+          
+          if (isHeading) {
+            // Add previous paragraph if exists
+            if (currentParagraph.trim()) {
+              documentChildren.push(
+                new docx.Paragraph({
+                  children: [
+                    new docx.TextRun({
+                      text: currentParagraph.trim(),
+                      size: 22,
+                    })
+                  ],
+                  spacing: { after: 240 },
+                  alignment: docx.AlignmentType.JUSTIFIED
+                })
+              );
+              currentParagraph = '';
+            }
+            
+            // Add heading
+            documentChildren.push(
+              new docx.Paragraph({
+                children: [
+                  new docx.TextRun({
+                    text: line,
+                    bold: true,
+                    size: 26,
+                  })
+                ],
+                spacing: { before: 240, after: 120 }
+              })
+            );
+          } else {
+            // Add to current paragraph
+            currentParagraph += (currentParagraph ? ' ' : '') + line;
+            
+            // If paragraph is getting long, close it
+            if (currentParagraph.length > 500) {
+              documentChildren.push(
+                new docx.Paragraph({
+                  children: [
+                    new docx.TextRun({
+                      text: currentParagraph.trim(),
+                      size: 22,
+                    })
+                  ],
+                  spacing: { after: 240 },
+                  alignment: docx.AlignmentType.JUSTIFIED
+                })
+              );
+              currentParagraph = '';
+            }
+          }
+        }
+        
+        // Add final paragraph if exists
+        if (currentParagraph.trim()) {
+          documentChildren.push(
+            new docx.Paragraph({
+              children: [
+                new docx.TextRun({
+                  text: currentParagraph.trim(),
+                  size: 22,
+                })
+              ],
+              spacing: { after: 240 },
+              alignment: docx.AlignmentType.JUSTIFIED
+            })
+          );
+        }
+
+        // Create the document
+        const doc = new docx.Document({
+          sections: [{
+            properties: {
+              page: {
+                margin: {
+                  top: docx.convertInchesToTwip(1),
+                  right: docx.convertInchesToTwip(1),
+                  bottom: docx.convertInchesToTwip(1),
+                  left: docx.convertInchesToTwip(1),
+                }
+              }
+            },
+            children: documentChildren
+          }]
+        });
+
+        // Generate and download the document
+        const buffer = await docx.Packer.toBlob(doc);
+        
+        // Use FileSaver to download
+        if (typeof saveAs !== 'undefined') {
+          saveAs(buffer, filename);
+        } else {
+          // Fallback download method
+          const url = window.URL.createObjectURL(buffer);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        }
+
+        // Show success message
+        setTimeout(() => {
+          downloadBtn.innerHTML = '<span class="download-icon">✅</span><span>Downloaded Successfully!</span>';
+          setTimeout(() => {
+            downloadBtn.innerHTML = originalText;
+          }, 2000);
+        }, 500);
+
+      } catch (error) {
+        console.error('Download error:', error);
+        
+        // Fallback: Download as plain text
+        try {
+          const journal = document.getElementById('journalSelect').value.toUpperCase();
+          const date = new Date().toISOString().slice(0, 10);
+          const filename = `Research_Paper_${journal}_${date}.txt`;
+          
+          const blob = new Blob([generatedContent], { type: 'text/plain;charset=utf-8' });
+          
+          if (typeof saveAs !== 'undefined') {
+            saveAs(blob, filename);
+          } else {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+          }
+          
+          downloadBtn.innerHTML = '<span class="download-icon">📄</span><span>Downloaded as TXT</span>';
+          setTimeout(() => {
+            downloadBtn.innerHTML = originalText;
+          }, 2000);
+          
+        } catch (fallbackError) {
+          console.error('Fallback download error:', fallbackError);
+          alert('Unable to download file. Please copy the text manually.');
+          downloadBtn.innerHTML = originalText;
+        }
+      } finally {
+        downloadBtn.disabled = false;
+        downloadBtn.classList.remove('loading');
+      }
+    }
+
     // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
       if (e.ctrlKey && e.key === 'Enter') {
         generateScript();
+      } else if (e.ctrlKey && e.key === 'd' && generatedContent) {
+        e.preventDefault();
+        downloadAsWord();
       }
     });
 
-    // Add tooltip for keyboard shortcut
+    // Add tooltip for keyboard shortcuts
     document.querySelector('.generate-btn').title = 'Click or press Ctrl+Enter to generate';
+    document.getElementById('downloadBtn').title = 'Click or press Ctrl+D to download';
   </script>
 </body>
 </html>
