@@ -134,20 +134,25 @@
   <div class="contact-container" id="contact-container">
     <h2>Contact Us</h2>
     <p>We’d love to hear from you. Drop your queries or feedback below!</p>
-    <form class="contact-form">
-      <input type="text" placeholder="Your Name" required />
-      <input type="email" placeholder="Your Email" required />
-      <textarea placeholder="Your Message" rows="5" required></textarea>
+    
+    <form id="contact-form" class="contact-form">
+      <input type="text" id="from_name" placeholder="Your Name" required />
+      <input type="email" id="from_email" placeholder="Your Email" required />
+      <textarea id="message" placeholder="Your Message" rows="5" required></textarea>
       <button type="submit">Send Message</button>
     </form>
+
+    <!-- ✅ Message status -->
+    <p id="status-message" style="text-align:center; margin-top:10px; color:#00e676;"></p>
   </div>
 </section>
-
 <!-- ⚪ Footer Section -->
 <footer class="footer">
   <p>© 2025 SmartScript.ai — All Rights Reserved</p>
 </footer>
 
+<!-- ✅ Add EmailJS SDK before your custom script -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
   <!-- ✅ Script Section -->
   <script>
@@ -296,18 +301,9 @@ const floatInObserver = new IntersectionObserver(entries => {
 floatElements.forEach(el => floatInObserver.observe(el));
 
 
-  document.querySelector('.contact-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    alert('Thanks for reaching out! 💌 We will get back to you soon.');
-    this.reset();
-  });
+  
 
-
-  document.querySelector('.contact-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    alert('Thanks for contacting us! 💬 We’ll get back to you shortly.');
-    this.reset();
-  });
+ 
 
 
   //backend work
@@ -327,6 +323,44 @@ function logout() {
       // Redirect to signup or login page
       window.location.href = "login.html"; // or "login.html"
     }
+
+
+
+
+
+
+
+
+
+(function() {
+    emailjs.init("EyxP-v2gUM8sJvf92"); // Your public key
+  })();
+
+  // ✅ Handle Contact Form Submission (no alerts, only inline message)
+  document.getElementById("contact-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const statusMessage = document.getElementById("status-message");
+    statusMessage.style.color = "#00e676";
+    statusMessage.textContent = "Sending your message... ⏳";
+
+    // ✅ Send form data to EmailJS (matches template vars)
+    emailjs.send("service_jtnesqm", "template_ibqzz2l", {
+      from_name: document.getElementById("from_name").value,
+      from_email: document.getElementById("from_email").value,
+      message: document.getElementById("message").value
+    })
+    .then(() => {
+      statusMessage.style.color = "#00e676";
+      statusMessage.textContent = "✅ Message sent successfully! We'll get back to you soon.";
+      document.getElementById("contact-form").reset();
+    })
+    .catch((error) => {
+      statusMessage.style.color = "#ff5252";
+      statusMessage.textContent = "❌ Failed to send. Please try again later.";
+      console.error("EmailJS Error:", error);
+    });
+  });
 
   </script>
 </body>
