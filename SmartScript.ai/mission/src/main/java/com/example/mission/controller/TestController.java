@@ -1,14 +1,12 @@
 package com.example.mission.controller;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/test")
-@CrossOrigin(origins = "http://localhost:3000") // allow frontend
 public class TestController {
-
-    @GetMapping("/public")
-    public String publicEndpoint() {
-        return "✅ Backend is running and public endpoint is accessible!";
+    @GetMapping("/smartscript/api/test/hello")
+    public String hello() {
+        return "✅ Public endpoint is working!";
     }
 }

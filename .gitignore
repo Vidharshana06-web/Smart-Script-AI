@@ -1,0 +1,12 @@
+# Ignore build & IDE files
+target/
+*.class
+*.jar
+*.war
+*.log
+.idea/
+*.iml
+.vscode/
+node_modules/
+dist/
+.DS_Store

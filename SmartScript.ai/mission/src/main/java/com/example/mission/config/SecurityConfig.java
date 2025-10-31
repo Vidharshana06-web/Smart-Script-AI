@@ -9,6 +9,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+
+
 @Configuration
 public class SecurityConfig {
 
@@ -27,9 +29,9 @@ public class SecurityConfig {
                 // Allow login/signup APIs
                 .requestMatchers("/api/auth/**").permitAll()
                 // Allow AI/content generation APIs
-                .requestMatchers("/api/ai/**", "/api/content/**").permitAll()
+                .requestMatchers("/api/ai/**").permitAll()
                 // ✅ Allow test APIs (fix your 403 issue)
-                .requestMatchers("/api/test/**").permitAll()
+                .requestMatchers("/smartscript/api/test/**").permitAll()
                 // Allow static resources (HTML, CSS, JS) without login
                 .requestMatchers("/", "/Ai.html", "/css/**", "/js/**", "/images/**").permitAll()
                 // Everything else will require authentication

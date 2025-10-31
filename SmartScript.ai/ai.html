@@ -483,6 +483,16 @@
       h2 {
         font-size: 26px;
       }
+
+
+
+
+
+
+
+      #journalSelect{
+        color:#000;
+      }
       
       .stats {
         flex-direction: column;
@@ -535,7 +545,7 @@
 
     <div class="form-group">
       <label for="journalSelect">Choose Journal Format:</label>
-      <select id="journalSelect">
+      <select id="journalSelect" style="color: rgb(212, 203, 203);">
         <option value="ieee">IEEE</option>
         <option value="springer">Springer</option>
         <option value="elsevier">Elsevier</option>
@@ -675,7 +685,7 @@
       `;
 
       try {
-          const response = await fetch('http://localhost:8080/api/test/generate', {
+          const response = await fetch('http://localhost:8080/smartscript/api/test/generate', {
 
           method: 'POST',
           headers: {
